@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     private var resultArray: ArrayList<ResultData> = ArrayList()
     private var downloadFlg: Boolean = false
 
+    //画像選択
     private val getContent = registerForActivityResult(ActivityResultContracts.GetContent()){ uri: Uri? ->
         if (uri != null) {
             //bitmapで取得
@@ -43,6 +44,7 @@ class MainActivity : AppCompatActivity() {
             getImageLabel(bitmap)
         }
     }
+    //カメラ
     private val getCamera = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
         if(result.resultCode == RESULT_OK){
             val fileDescriptor = mSaveMediaFile?.getSaveUri()?.let { contentResolver.openFileDescriptor(it, "r") }
@@ -51,7 +53,7 @@ class MainActivity : AppCompatActivity() {
             getImageLabel(bitmap)
         }
     }
-
+    //権限
     private val checkPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()){ result ->
         if(!result){
             finish()
@@ -68,7 +70,6 @@ class MainActivity : AppCompatActivity() {
 
         //権限チェック
         checkPermission.launch(WRITE_EXTERNAL_STORAGE)
-
         //モデルダウンロード状況によるレイアウト変更
         setDownloadResult(downloadFlg)
 
@@ -135,6 +136,7 @@ class MainActivity : AppCompatActivity() {
         val translator = Translation.getClient(options)
 
         translator.translate(text)
+                //成功
             .addOnSuccessListener { translatedText ->
                 var resultText = ""
                 val split = translatedText.split("、")
@@ -149,6 +151,7 @@ class MainActivity : AppCompatActivity() {
                 final_result_txt.text = "この写真は「" + split[0] + "」"
                 resultArray.clear()
             }
+                //失敗
             .addOnFailureListener { e ->
                 result_txt.text = "Translation Faild"
                 final_result_txt.text = "画像を選んでください"
@@ -156,6 +159,7 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
+    //モデルダウンロード
     private fun modelDownload(){
         val options = TranslatorOptions.Builder()
             .setSourceLanguage(TranslateLanguage.ENGLISH)
@@ -178,6 +182,7 @@ class MainActivity : AppCompatActivity() {
             }
     }
 
+    //モデルダウンロード状況によるレイアウト設定
     private fun setDownloadResult(result: Boolean){
         mCustomSharedPreferences!!.setBooleanShared(DOWNLOAD_KEY, result)
         downloadFlg = result
@@ -192,6 +197,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //画像の向きチェック
     private fun rotateImageIfRequired(parcelFileDescriptor: ParcelFileDescriptor): Bitmap {
         val descriptor = parcelFileDescriptor.fileDescriptor
         var bitmap = BitmapFactory.decodeFileDescriptor(descriptor)
@@ -214,6 +220,7 @@ class MainActivity : AppCompatActivity() {
         return bitmap
     }
 
+    //画像の向き変更
     private fun rotateImage(bitmap: Bitmap, degree: Int): Bitmap {
         val matrix = Matrix()
         matrix.postRotate(degree.toFloat())
