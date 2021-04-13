@@ -170,6 +170,9 @@ class MainActivity : AppCompatActivity() {
             //.requireWifi()
             .build()
 
+        download_btn.isEnabled = false
+        progress_bar.visibility = View.VISIBLE
+
         translator.downloadModelIfNeeded(conditions)
             .addOnSuccessListener {
                 setDownloadResult(true)
@@ -177,6 +180,7 @@ class MainActivity : AppCompatActivity() {
             }
             .addOnFailureListener { e ->
                 result_txt.text = "Model Download Faild"
+                download_btn.isEnabled = true
                 setDownloadResult(false)
                 Log.e("getTranslation", "err=$e");
             }
@@ -187,13 +191,19 @@ class MainActivity : AppCompatActivity() {
         mCustomSharedPreferences!!.setBooleanShared(DOWNLOAD_KEY, result)
         downloadFlg = result
         if(result) {
+            progress_bar.visibility = View.GONE
             picture_btn.visibility = View.VISIBLE
             camera_btn.visibility = View.VISIBLE
             download_btn.visibility = View.GONE
+            final_result_txt.text = "画像を選んでください"
+            analysis_txt.text = "分析結果"
         }else{
+            progress_bar.visibility = View.GONE
             picture_btn.visibility = View.GONE
             camera_btn.visibility = View.GONE
             download_btn.visibility = View.VISIBLE
+            final_result_txt.text = "モデルデータをダウンロードしてください"
+            analysis_txt.text = ""
         }
     }
 
