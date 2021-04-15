@@ -7,11 +7,11 @@ plugins {
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    buildToolsVersion '30.0.3'
 
     defaultConfig {
         applicationId "com.example.get_object"
-        minSdkVersion 28
+        minSdkVersion 26
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
